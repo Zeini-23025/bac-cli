@@ -1,7 +1,6 @@
-
-
 import csv
 from collections import Counter
+import matplotlib.pyplot as plt
 
 def search_student(file_path, identifier):
     """
@@ -40,58 +39,55 @@ def check_admission_status(file_path, identifier):
     if not found:
         print(f"Aucun étudiant trouvé avec l'identifiant : {identifier}")
 
-def calculate_statistics(file_path):
+def plot_decision_stats(decision_counts, total_students):
+    labels = ['Admis', 'Sessionnaire', 'Ajourné', 'Abscent']
+    admis_count = sum(count for dec, count in decision_counts.items() if dec.startswith('Admis'))
+    sessionnaire_count = decision_counts['Sessionnaire']
+    ajourne_count = sum(count for dec, count in decision_counts.items() if dec.startswith('Ajourné'))
+    abscent_count = decision_counts['Abscent']
+    sizes = [admis_count, sessionnaire_count, ajourne_count, abscent_count]
+    
+    plt.figure(figsize=(10, 6))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+    plt.title('Répartition des décisions')
+    plt.axis('equal')
+    plt.savefig('statistiques_decisions.png')
+    print("\nGraphique 'statistiques_decisions.png' généré.")
+
+def plot_stats_by_category(data, category_key, title, filename):
+    categories = sorted(list(set(row[category_key] for row in data)))
+    percentages = []
+    for category in categories:
+        category_students = [row for row in data if row[category_key] == category]
+        total_category = len(category_students)
+        if total_category > 0:
+            admis_category = sum(1 for row in category_students if row['Decision'].startswith('Admis'))
+            percentages.append((admis_category / total_category) * 100)
+        else:
+            percentages.append(0)
+    
+    plt.figure(figsize=(12, 8))
+    plt.barh(categories, percentages)
+    plt.xlabel('Pourcentage d\'admis')
+    plt.title(title)
+    plt.tight_layout()
+    plt.savefig(filename)
+    print(f"Graphique '{filename}' généré.")
+
+def calculate_and_plot_statistics(file_path):
     """
-    Calcule et affiche les statistiques sur les résultats du bac.
+    Calcule et affiche les statistiques sur les résultats du bac, et génère des graphiques.
     """
     with open(file_path, mode='r', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         data = list(reader)
         total_students = len(data)
 
-        # 1. Pourcentage des admis, sessionnaires, ajournés, absents
         decision_counts = Counter(row['Decision'] for row in data)
-        admis_count = sum(count for dec, count in decision_counts.items() if dec.startswith('Admis'))
-        sessionnaire_count = decision_counts['Sessionnaire']
-        ajourne_count = sum(count for dec, count in decision_counts.items() if dec.startswith('Ajourné'))
-        abscent_count = decision_counts['Abscent']
-
-        print("\n--- Statistiques Générales ---")
-        print(f"Nombre total d'étudiants: {total_students}")
-        print(f"Pourcentage d'admis: {(admis_count / total_students) * 100:.2f}%")
-        print(f"Pourcentage de sessionnaires: {(sessionnaire_count / total_students) * 100:.2f}%")
-        print(f"Pourcentage d'ajournés: {(ajourne_count / total_students) * 100:.2f}%")
-        print(f"Pourcentage d'absents: {(abscent_count / total_students) * 100:.2f}%")
-
-        # 2. Pourcentage des admis par série
-        series = sorted(list(set(row['SERIE'] for row in data)))
-        print("\n--- Pourcentage d'admis par série ---")
-        for serie in series:
-            serie_students = [row for row in data if row['SERIE'] == serie]
-            total_serie = len(serie_students)
-            if total_serie > 0:
-                admis_serie = sum(1 for row in serie_students if row['Decision'].startswith('Admis'))
-                print(f"  {serie}: {(admis_serie / total_serie) * 100:.2f}%")
-
-        # 3. Pourcentage des admis par Wilaya
-        wilayas = sorted(list(set(row['Wilaya_FR'] for row in data)))
-        print("\n--- Pourcentage d'admis par Wilaya ---")
-        for wilaya in wilayas:
-            wilaya_students = [row for row in data if row['Wilaya_FR'] == wilaya]
-            total_wilaya = len(wilaya_students)
-            if total_wilaya > 0:
-                admis_wilaya = sum(1 for row in wilaya_students if row['Decision'].startswith('Admis'))
-                print(f"  {wilaya}: {(admis_wilaya / total_wilaya) * 100:.2f}%")
-
-        # 4. Pourcentage des admis par Noreg
-        noregs = sorted(list(set(row['Noreg'] for row in data)))
-        print("\n--- Pourcentage d'admis par Noreg ---")
-        for noreg in noregs:
-            noreg_students = [row for row in data if row['Noreg'] == noreg]
-            total_noreg = len(noreg_students)
-            if total_noreg > 0:
-                admis_noreg = sum(1 for row in noreg_students if row['Decision'].startswith('Admis'))
-                print(f"  Noreg {noreg}: {(admis_noreg / total_noreg) * 100:.2f}%")
+        plot_decision_stats(decision_counts, total_students)
+        plot_stats_by_category(data, 'SERIE', 'Pourcentage d\'admis par série', 'statistiques_series.png')
+        plot_stats_by_category(data, 'Wilaya_FR', 'Pourcentage d\'admis par Wilaya', 'statistiques_wilayas.png')
+        plot_stats_by_category(data, 'Noreg', 'Pourcentage d\'admis par Noreg', 'statistiques_noregs.png')
 
 if __name__ == "__main__":
     FILE_PATH = 'RESULTATS_BAC_2024_SESSION_NORMALE.csv'
@@ -100,7 +96,7 @@ if __name__ == "__main__":
         print("\n--- Menu ---")
         print("1. Rechercher toutes les informations d'un étudiant")
         print("2. Vérifier le statut d'admission d'un étudiant")
-        print("3. Afficher les statistiques")
+        print("3. Afficher les statistiques et générer les graphiques")
         print("4. Quitter")
         
         choice = input("Entrez votre choix (1-4) : ")
@@ -112,7 +108,7 @@ if __name__ == "__main__":
             student_id = input("Entrez le NNI ou le Num_Bac de l'étudiant : ")
             check_admission_status(FILE_PATH, student_id)
         elif choice == '3':
-            calculate_statistics(FILE_PATH)
+            calculate_and_plot_statistics(FILE_PATH)
         elif choice == '4':
             print("Au revoir !")
             break
