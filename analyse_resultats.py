@@ -66,7 +66,7 @@ def plot_decision_stats(decision_counts, total_students):
     ax.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
            shadow=True, startangle=140, textprops={'fontsize': 12})
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    ax.set_title('Répartition des décisions du BAC 2024', fontsize=16, fontweight='bold')
+    ax.set_title('Répartition des décisions du BAC ', fontsize=16, fontweight='bold')
     plt.tight_layout()
     plt.savefig('images/statistiques_decisions.png')
     print("\nGraphique 'images/statistiques_decisions.png' généré.")

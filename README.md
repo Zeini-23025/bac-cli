@@ -1,6 +1,6 @@
-# Analyse des Résultats du BAC 2024
+# Analyse des Résultats du BAC
 
-Ce projet fournit un ensemble de scripts Python pour analyser les résultats du BAC 2024 à partir d'un fichier CSV.
+Ce projet fournit un ensemble de scripts Python pour analyser les résultats du BAC à partir d'un fichier CSV.
 
 ## Fonctionnalités
 
@@ -40,3 +40,31 @@ Lorsque vous utilisez la fonctionnalité de statistiques, les graphiques suivant
 - `statistiques_series.png`
 - `statistiques_wilayas.png`
 - `statistiques_noregs.png`
+
+## Captures d'écran
+
+### Recherche Détaillée
+
+![Recherche Détaillée](screenshots/Rechercher_detail.png)
+
+### Statut d'Admission
+
+![Statut d'Admission](screenshots/statut_admission.png)
+
+## Graphiques Statistiques
+
+### Statistiques par Décision
+
+![Statistiques par Décision](images/statistiques_decisions.png)
+
+### Statistiques par Noreg
+
+![Statistiques par Noreg](images/statistiques_noregs.png)
+
+### Statistiques par Série
+
+![Statistiques par Série](images/statistiques_series.png)
+
+### Statistiques par Wilaya
+
+![Statistiques par Wilaya](images/statistiques_wilayas.png)
