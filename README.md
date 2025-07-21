@@ -49,7 +49,7 @@ Lorsque vous utilisez la fonctionnalité de statistiques, les graphiques suivant
 
 ### Statut d'Admission
 
-![Statut d'Admission](screenshots/statut_admission .png)
+![Statut d'Admission](screenshots/statut_admission.png)
 
 ## Graphiques Statistiques
 
