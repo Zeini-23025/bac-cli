@@ -4,7 +4,7 @@ from collections import Counter
 import matplotlib.pyplot as plt
 
 
-def search_student(file_path, identifier):
+def search_student(file_path, identifier, message="Informations de l'étudiant :"):
     """
     Recherche un étudiant par son NNI
     ou son Num_Bac et affiche ses informations.
@@ -14,11 +14,12 @@ def search_student(file_path, identifier):
         found = False
         for row in reader:
             if row['NNI'] == identifier or row['Num_Bac'] == identifier:
-                print("Informations de l'étudiant :")
+                print(message)
                 for key, value in row.items():
                     print(f"  {key}: {value}")
                 print("-" * 20)
                 found = True
+                return
 
     if not found:
         print(f"Aucun étudiant trouvé avec l'identifiant : {identifier}")
@@ -138,14 +139,17 @@ def search_students_from_file(file_path, student_file):
     """
     Recherche les informations de plusieurs étudiants à partir d'un fichier.
     """
+    print(f"\n--- Recherche des étudiants du fichier {student_file} ---")
     with open(student_file, mode='r', encoding='utf-8') as f:
         for line in f:
-            # Extraire le Num_Bac de chaque ligne (format: nom:bac_num)
+            # Extraire le nom et le Num_Bac de chaque ligne (format: nom:bac_num)
             try:
-                student_id = line.strip().split(':')[1]
-                search_student(file_path, student_id)
-            except IndexError:
+                name, student_id = line.strip().split(':')
+                message = f"Informations pour {name.strip()} (Num_Bac: {student_id.strip()}) :"
+                search_student(file_path, student_id.strip(), message)
+            except ValueError:
                 print(f"Ligne mal formatée dans {student_file}: {line.strip()}")
+    print("--- Fin de la recherche ---")
 
 
 if __name__ == "__main__":
