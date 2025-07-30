@@ -135,7 +135,7 @@ def calculate_and_plot_statistics(file_path):
 
 
 if __name__ == "__main__":
-    FILE_PATH = 'RESULTATS_BAC_2024_SESSION_NORMALE.csv'
+    FILE_PATH = 'data/RESULTATS_BAC_2024_SESSION_NORMALE.csv'
 
     while True:
         print("\n--- Menu ---")
