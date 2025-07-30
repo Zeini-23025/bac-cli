@@ -134,17 +134,33 @@ def calculate_and_plot_statistics(file_path):
         )
 
 
+def search_students_from_file(file_path, student_file):
+    """
+    Recherche les informations de plusieurs étudiants à partir d'un fichier.
+    """
+    with open(student_file, mode='r', encoding='utf-8') as f:
+        for line in f:
+            # Extraire le Num_Bac de chaque ligne (format: nom:bac_num)
+            try:
+                student_id = line.strip().split(':')[1]
+                search_student(file_path, student_id)
+            except IndexError:
+                print(f"Ligne mal formatée dans {student_file}: {line.strip()}")
+
+
 if __name__ == "__main__":
     FILE_PATH = 'data/RESULTATS_BAC_2024_SESSION_NORMALE.csv'
+    ETU_FILE = 'etu.txt'
 
     while True:
         print("\n--- Menu ---")
         print("1. Rechercher toutes les informations d'un étudiant")
         print("2. Vérifier le statut d'admission d'un étudiant")
         print("3. Afficher les statistiques et générer les graphiques")
-        print("4. Quitter")
+        print("4. Rechercher des étudiants depuis le fichier etu.txt")
+        print("5. Quitter")
 
-        choice = input("Entrez votre choix (1-4) : ")
+        choice = input("Entrez votre choix (1-5) : ")
 
         if choice == '1':
             student_id = input("Entrez le NNI ou le Num_Bac de l'étudiant : ")
@@ -155,6 +171,8 @@ if __name__ == "__main__":
         elif choice == '3':
             calculate_and_plot_statistics(FILE_PATH)
         elif choice == '4':
+            search_students_from_file(FILE_PATH, ETU_FILE)
+        elif choice == '5':
             print("Au revoir !")
             break
         else:
