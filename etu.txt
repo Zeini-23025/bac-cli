@@ -1,2 +1,5 @@
 memi:19736
 mintous:19798
+med:25201
+boy:24478
+kej:24376
